@@ -3,63 +3,53 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0d0d0d" />
-  <meta name="description" content="Sorteador de cartas de condição de vitória." />
-  <title>Sorteador de Cartas</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description" content="Sorteador de uma carta de condição de vitória." />
+  <title>Sorteador de Condições de Vitória</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app-shell">
-    <section class="hero" aria-labelledby="page-title">
+    <header class="hero" aria-labelledby="page-title">
       <span class="eyebrow">CONDIÇÕES DE VITÓRIA</span>
-      <h1 id="page-title">Sorteador de Cartas</h1>
-      <p class="subtitle">
-        Embaralhe o baralho e revele 10 cartas em uma ordem aleatória.
-      </p>
+      <h1 id="page-title">Sorteio de Carta</h1>
+      <p class="subtitle">Sorteie uma condição de vitória aleatoriamente.</p>
+    </header>
 
-      <div class="controls" aria-label="Controles do sorteador">
+    <section class="draw-area" aria-label="Sorteador de carta">
+      <div id="stage" class="stage">
+        <div id="deck" class="deck" aria-hidden="true">
+          <div class="deck-layer deck-layer-3"></div>
+          <div class="deck-layer deck-layer-2"></div>
+          <div class="deck-layer deck-layer-1">
+            <span class="deck-mark">✦</span>
+            <span class="deck-label">CARTA</span>
+          </div>
+        </div>
+
+        <article id="resultCard" class="result-card" aria-live="polite" hidden>
+          <div class="card-inner">
+            <div class="card-face card-back" aria-hidden="true">
+              <span class="deck-mark">✦</span>
+              <span class="deck-label">CARTA</span>
+            </div>
+            <div class="card-face card-front">
+              <img id="cardImage" src="" alt="" draggable="false" />
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="controls">
         <button id="drawButton" class="button button-primary" type="button">
           <span class="button-icon" aria-hidden="true">✦</span>
-          <span>Sortear 10 cartas</span>
-        </button>
-        <button id="resetButton" class="button button-ghost" type="button" hidden>
-          Limpar
+          <span id="buttonText">Sortear carta</span>
         </button>
       </div>
 
-      <div class="status-row" aria-live="polite" aria-atomic="true">
-        <span id="statusText">10 cartas disponíveis</span>
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="counterText">0 / 10 reveladas</span>
-      </div>
-    </section>
-
-    <section class="draw-area" aria-label="Resultado do sorteio">
-      <div id="deckStage" class="deck-stage" aria-hidden="true">
-        <div class="deck-card deck-card-back deck-card-3"></div>
-        <div class="deck-card deck-card-back deck-card-2"></div>
-        <div class="deck-card deck-card-back deck-card-1">
-          <span>✦</span>
-        </div>
-      </div>
-
-      <div id="cardsGrid" class="cards-grid" role="list"></div>
+      <p id="statusText" class="status" aria-live="polite">10 cartas disponíveis</p>
     </section>
   </main>
-
-  <template id="cardTemplate">
-    <article class="result-card" role="listitem">
-      <div class="card-inner">
-        <div class="card-face card-back" aria-hidden="true">
-          <span class="back-mark">✦</span>
-          <span class="back-label">CARTA</span>
-        </div>
-        <div class="card-face card-front">
-          <img src="" alt="" loading="eager" draggable="false" />
-        </div>
-      </div>
-    </article>
-  </template>
 
   <script src="script.js" defer></script>
 </body>
