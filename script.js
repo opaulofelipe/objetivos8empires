@@ -11,96 +11,63 @@ const cards = [
   { name: "Urbanização", file: "assets/cards/urbanizacao.jpeg" },
 ];
 
-const DRAW_COUNT = Math.min(10, cards.length);
-const SHUFFLE_DURATION = 700;
-const REVEAL_GAP = 130;
+const SHUFFLE_DURATION = 850;
+const REVEAL_DELAY = 170;
 
 const drawButton = document.querySelector("#drawButton");
-const resetButton = document.querySelector("#resetButton");
-const cardsGrid = document.querySelector("#cardsGrid");
-const deckStage = document.querySelector("#deckStage");
-const template = document.querySelector("#cardTemplate");
+const buttonText = document.querySelector("#buttonText");
 const statusText = document.querySelector("#statusText");
-const counterText = document.querySelector("#counterText");
+const deck = document.querySelector("#deck");
+const resultCard = document.querySelector("#resultCard");
+const cardImage = document.querySelector("#cardImage");
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function shuffle(items) {
-  const copy = [...items];
-
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-
-  return copy;
+function randomCard() {
+  const index = Math.floor(Math.random() * cards.length);
+  return cards[index];
 }
 
-function createCard(card) {
-  const node = template.content.firstElementChild.cloneNode(true);
-  const image = node.querySelector("img");
-
-  image.src = card.file;
-  image.alt = `Carta ${card.name}`;
-  node.setAttribute("aria-label", card.name);
-
-  return node;
-}
-
-async function drawCards() {
+async function drawCard() {
   drawButton.disabled = true;
-  resetButton.hidden = true;
-  cardsGrid.replaceChildren();
-  deckStage.classList.remove("is-hidden");
-  deckStage.classList.add("is-shuffling");
+  resultCard.hidden = true;
+  resultCard.classList.remove("is-visible", "is-revealed");
+  deck.hidden = false;
+  deck.classList.remove("is-leaving");
+  deck.classList.add("is-shuffling");
 
   statusText.textContent = "Embaralhando…";
-  counterText.textContent = `0 / ${DRAW_COUNT} reveladas`;
+  buttonText.textContent = "Sorteando…";
 
   await wait(SHUFFLE_DURATION);
 
-  const selected = shuffle(cards).slice(0, DRAW_COUNT);
-  deckStage.classList.remove("is-shuffling");
+  const selected = randomCard();
+  cardImage.src = selected.file;
+  cardImage.alt = `Carta ${selected.name}`;
+  resultCard.setAttribute("aria-label", `Carta sorteada: ${selected.name}`);
 
-  selected.forEach((card) => {
-    cardsGrid.appendChild(createCard(card));
+  deck.classList.remove("is-shuffling");
+  deck.classList.add("is-leaving");
+  await wait(REVEAL_DELAY);
+
+  deck.hidden = true;
+  resultCard.hidden = false;
+
+  requestAnimationFrame(() => {
+    resultCard.classList.add("is-visible");
+    requestAnimationFrame(() => resultCard.classList.add("is-revealed"));
   });
 
-  const resultCards = [...cardsGrid.querySelectorAll(".result-card")];
-  deckStage.classList.add("is-hidden");
-  statusText.textContent = "Revelando cartas…";
+  await wait(620);
 
-  for (let index = 0; index < resultCards.length; index += 1) {
-    const resultCard = resultCards[index];
-
-    requestAnimationFrame(() => resultCard.classList.add("is-inserted"));
-    await wait(80);
-    resultCard.classList.add("is-revealed");
-
-    counterText.textContent = `${index + 1} / ${DRAW_COUNT} reveladas`;
-    await wait(REVEAL_GAP);
-  }
-
-  statusText.textContent = "Sorteio concluído";
+  statusText.textContent = `Carta sorteada: ${selected.name}`;
+  buttonText.textContent = "Sortear novamente";
   drawButton.disabled = false;
-  drawButton.querySelector("span:last-child").textContent = "Sortear novamente";
-  resetButton.hidden = false;
 }
 
-function resetDraw() {
-  cardsGrid.replaceChildren();
-  deckStage.classList.remove("is-hidden", "is-shuffling");
-  drawButton.disabled = false;
-  drawButton.querySelector("span:last-child").textContent = "Sortear 10 cartas";
-  resetButton.hidden = true;
-  statusText.textContent = `${cards.length} cartas disponíveis`;
-  counterText.textContent = `0 / ${DRAW_COUNT} reveladas`;
-}
+drawButton.addEventListener("click", drawCard);
 
-drawButton.addEventListener("click", drawCards);
-resetButton.addEventListener("click", resetDraw);
-
-// Pré-carrega as imagens para que a animação de revelação seja imediata.
+// Pré-carrega todas as imagens para uma revelação sem atraso.
 cards.forEach(({ file }) => {
   const image = new Image();
   image.src = file;
