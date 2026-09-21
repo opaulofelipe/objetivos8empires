@@ -3,7 +3,7 @@ const cards = [
   { name: "Prosperidade", file: "assets/cards/prosperidade.jpeg" },
   { name: "Militarismo", file: "assets/cards/militarismo.jpeg" },
   { name: "Talassocracia", file: "assets/cards/talassocracia.jpeg" },
-  { name: "Diplomacia", file: "assets/cards/diplomacia.jpeg" },
+  { name: "Diplomacia", file: "assets/cards/ascensao.jpeg" },
   { name: "Imperialismo", file: "assets/cards/imperialismo.jpeg" },
   { name: "Engenharia", file: "assets/cards/engenharia.jpeg" },
   { name: "Expansionismo", file: "assets/cards/expansionismo.jpeg" },
